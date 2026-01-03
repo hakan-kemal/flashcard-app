@@ -1,6 +1,7 @@
 import { type RouteConfig, index, route } from '@react-router/dev/routes';
 
 export default [
-  index('routes/study-mode.tsx'),
+  index('routes/home.tsx'),
+  route('study-mode', 'routes/study-mode.tsx'),
   route('all-cards', 'routes/all-cards.tsx'),
 ] satisfies RouteConfig;

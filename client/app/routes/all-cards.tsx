@@ -1,45 +1,50 @@
-import { useState } from "react";
-import type { Route } from "./+types/all-cards";
-import flashcardsData from "../data/data.json";
+import { useState } from 'react';
+import flashcardsData from '../data/data.json';
+import type { Route } from './+types/all-cards';
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "All Cards | Flashcard App" },
-    { name: "description", content: "View and create flashcards" },
+    { title: 'All Cards | Flashcard App' },
+    { name: 'description', content: 'View and create flashcards' },
   ];
 }
 
 export default function AllCards() {
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
-  const [category, setCategory] = useState("");
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
+  const [category, setCategory] = useState('');
   const [hideMastered, setHideMastered] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("All Categories");
+  const [selectedCategory, setSelectedCategory] = useState('All Categories');
 
   const flashcards = flashcardsData.flashcards;
 
   // Filter cards based on settings
-  const filteredCards = flashcards.filter(card => {
-    const categoryMatch = selectedCategory === "All Categories" || card.category === selectedCategory;
+  const filteredCards = flashcards.filter((card) => {
+    const categoryMatch =
+      selectedCategory === 'All Categories' ||
+      card.category === selectedCategory;
     const masteredFilter = hideMastered ? card.knownCount < 5 : true;
     return categoryMatch && masteredFilter;
   });
 
   // Get unique categories
-  const categories = ["All Categories", ...new Set(flashcards.map(card => card.category))];
+  const categories = [
+    'All Categories',
+    ...new Set(flashcards.map((card) => card.category)),
+  ];
 
   const handleCreateCard = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Implement card creation functionality
-    console.log("Create card:", { question, answer, category });
-    setQuestion("");
-    setAnswer("");
-    setCategory("");
+    console.log('Create card:', { question, answer, category });
+    setQuestion('');
+    setAnswer('');
+    setCategory('');
   };
 
   const handleShuffle = () => {
     // TODO: Implement shuffle functionality
-    console.log("Shuffle cards");
+    console.log('Shuffle cards');
   };
 
   return (
@@ -88,9 +93,14 @@ export default function AllCards() {
       </form>
 
       <div>
-        <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
-          {categories.map(cat => (
-            <option key={cat} value={cat}>{cat}</option>
+        <select
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
           ))}
         </select>
 

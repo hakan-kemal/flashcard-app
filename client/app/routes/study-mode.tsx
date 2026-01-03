@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { Route } from './+types/study-mode';
 import flashcardsData from '../data/data.json';
+import type { Route } from './+types/study-mode';
 
 export function meta({}: Route.MetaArgs) {
   return [
