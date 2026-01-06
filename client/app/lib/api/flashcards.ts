@@ -121,9 +121,9 @@ export async function deleteFlashcard(id: string): Promise<void> {
 }
 
 /**
- * Increment the known count (mastery level) of a flashcard
+ * Increment the mastery level of a flashcard
  */
-export async function incrementKnownCount(id: string): Promise<Flashcard> {
+export async function incrementMasteryLevel(id: string): Promise<Flashcard> {
   const flashcards = await getFlashcards();
   const card = flashcards.find((c) => c.id === id);
 
@@ -131,20 +131,47 @@ export async function incrementKnownCount(id: string): Promise<Flashcard> {
     throw new Error(`Flashcard with id ${id} not found`);
   }
 
-  return updateFlashcard({
-    id,
-    knownCount: Math.min(card.knownCount + 1, 5),
-  });
+  const updatedCard: Flashcard = {
+    ...card,
+    masteryLevel: Math.min(card.masteryLevel + 1, 5),
+    updatedAt: new Date().toISOString(),
+  };
+
+  const index = flashcards.findIndex((c) => c.id === id);
+  flashcards[index] = updatedCard;
+
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(flashcards));
+  }
+
+  return updatedCard;
 }
 
 /**
- * Reset the known count (mastery level) of a flashcard
+ * Reset the mastery level of a flashcard
  */
-export async function resetKnownCount(id: string): Promise<Flashcard> {
-  return updateFlashcard({
-    id,
-    knownCount: 0,
-  });
+export async function resetMasteryLevel(id: string): Promise<Flashcard> {
+  const flashcards = await getFlashcards();
+  const card = flashcards.find((c) => c.id === id);
+
+  if (!card) {
+    throw new Error(`Flashcard with id ${id} not found`);
+  }
+
+  const updatedCard: Flashcard = {
+    ...card,
+    masteryLevel: 0,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const index = flashcards.findIndex((c) => c.id === id);
+  flashcards[index] = updatedCard;
+
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(flashcards));
+  }
+
+  return updatedCard;
 }
 
 /**

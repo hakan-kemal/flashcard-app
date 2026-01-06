@@ -180,13 +180,13 @@ export function useDeleteFlashcard() {
 }
 
 /**
- * Hook to increment the known count (mastery level)
+ * Hook to increment the mastery level
  */
-export function useIncrementKnownCount() {
+export function useIncrementMasteryLevel() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => flashcardsApi.incrementKnownCount(id),
+    mutationFn: (id: string) => flashcardsApi.incrementMasteryLevel(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: flashcardKeys.lists() });
     },
@@ -194,13 +194,13 @@ export function useIncrementKnownCount() {
 }
 
 /**
- * Hook to reset the known count
+ * Hook to reset the mastery level
  */
-export function useResetKnownCount() {
+export function useResetMasteryLevel() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => flashcardsApi.resetKnownCount(id),
+    mutationFn: (id: string) => flashcardsApi.resetMasteryLevel(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: flashcardKeys.lists() });
       toast.success('Progress reset successfully!');

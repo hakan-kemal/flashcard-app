@@ -6,7 +6,7 @@ export interface Flashcard {
   question: string;
   answer: string;
   category: string;
-  knownCount: number; // Mastery level: 0-5
+  masteryLevel: number; // Mastery level: 0-5
   createdAt?: string;
   updatedAt?: string;
 }
@@ -22,17 +22,15 @@ export type CreateFlashcardInput = Omit<
 /**
  * Input type for updating a flashcard
  */
-export type UpdateFlashcardInput = Partial<
-  Omit<Flashcard, 'id' | 'createdAt'>
-> & {
+export type UpdateFlashcardInput = {
   id: string;
-};
+} & Partial<Omit<Flashcard, 'id' | 'createdAt' | 'updatedAt'>>;
 
 /**
  * Category with count information for filters
  */
 export interface CategoryWithCount {
-  name: string;
+  category: string;
   count: number;
 }
 
@@ -41,17 +39,17 @@ export interface CategoryWithCount {
  */
 export interface StudyStatistics {
   total: number;
-  mastered: number; // knownCount === 5
-  inProgress: number; // knownCount > 0 && knownCount < 5
-  notStarted: number; // knownCount === 0
+  mastered: number; // masteryLevel === 5
+  inProgress: number; // masteryLevel > 0 && masteryLevel < 5
+  notStarted: number; // masteryLevel === 0
 }
 
 /**
  * Filter options for flashcards
  */
 export interface FlashcardFilters {
-  categories: string[];
-  hideMastered: boolean;
+  categories?: string[];
+  hideMastered?: boolean;
   searchQuery?: string;
 }
 

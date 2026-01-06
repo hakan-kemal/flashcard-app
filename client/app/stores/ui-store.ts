@@ -29,6 +29,11 @@ interface UIStore {
   resetStudyMode: () => void;
 
   // Modal state
+  modalState: {
+    createEdit: boolean;
+  };
+  openModal: (modal: 'createEdit') => void;
+  closeModal: () => void;
   isCardFormOpen: boolean;
   editingCardId: string | null;
   openCardForm: (cardId?: string) => void;
@@ -43,7 +48,7 @@ interface UIStore {
 }
 
 const defaultFilters: FlashcardFilters = {
-  categories: [],
+  categories: undefined,
   hideMastered: false,
   searchQuery: '',
 };
@@ -95,6 +100,17 @@ export const useUIStore = create<UIStore>()(
         }),
 
       // Modal
+      modalState: {
+        createEdit: false,
+      },
+      openModal: (modal) =>
+        set((state) => ({
+          modalState: { ...state.modalState, [modal]: true },
+        })),
+      closeModal: () =>
+        set({
+          modalState: { createEdit: false },
+        }),
       isCardFormOpen: false,
       editingCardId: null,
       openCardForm: (cardId) =>

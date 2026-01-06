@@ -19,8 +19,8 @@ export function getCategoriesWithCounts(
   });
 
   return Array.from(categoryMap.entries())
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .map(([category, count]) => ({ category, count }))
+    .sort((a, b) => a.category.localeCompare(b.category));
 }
 
 /**
@@ -28,11 +28,11 @@ export function getCategoriesWithCounts(
  */
 export function calculateStatistics(flashcards: Flashcard[]): StudyStatistics {
   const total = flashcards.length;
-  const mastered = flashcards.filter((card) => card.knownCount === 5).length;
+  const mastered = flashcards.filter((card) => card.masteryLevel === 5).length;
   const inProgress = flashcards.filter(
-    (card) => card.knownCount > 0 && card.knownCount < 5
+    (card) => card.masteryLevel > 0 && card.masteryLevel < 5
   ).length;
-  const notStarted = flashcards.filter((card) => card.knownCount === 0).length;
+  const notStarted = flashcards.filter((card) => card.masteryLevel === 0).length;
 
   return {
     total,
@@ -52,15 +52,13 @@ export function filterFlashcards(
   let filtered = [...flashcards];
 
   // Filter by categories
-  if (filters.categories.length > 0) {
-    filtered = filtered.filter((card) =>
-      filters.categories.includes(card.category)
-    );
+  if (filters.categories && filters.categories.length > 0) {
+    filtered = filtered.filter((card) => filters.categories!.includes(card.category));
   }
 
   // Hide mastered cards
   if (filters.hideMastered) {
-    filtered = filtered.filter((card) => card.knownCount < 5);
+    filtered = filtered.filter((card) => card.masteryLevel < 5);
   }
 
   // Search by question or answer
@@ -91,27 +89,27 @@ export function shuffleArray<T>(array: T[]): T[] {
 /**
  * Get mastery status text
  */
-export function getMasteryStatus(knownCount: number): string {
-  if (knownCount === 0) return 'Not Started';
-  if (knownCount === 5) return 'Mastered';
+export function getMasteryStatus(masteryLevel: number): string {
+  if (masteryLevel === 0) return 'Not Started';
+  if (masteryLevel === 5) return 'Mastered';
   return 'In Progress';
 }
 
 /**
  * Get mastery color class for Tailwind
  */
-export function getMasteryColor(knownCount: number): string {
-  if (knownCount === 0) return 'text-gray-500';
-  if (knownCount < 3) return 'text-orange-500';
-  if (knownCount < 5) return 'text-blue-500';
+export function getMasteryColor(masteryLevel: number): string {
+  if (masteryLevel === 0) return 'text-gray-500';
+  if (masteryLevel < 3) return 'text-orange-500';
+  if (masteryLevel < 5) return 'text-blue-500';
   return 'text-green-500';
 }
 
 /**
  * Get progress percentage
  */
-export function getProgressPercentage(knownCount: number): number {
-  return (knownCount / 5) * 100;
+export function getProgressPercentage(masteryLevel: number): number {
+  return (masteryLevel / 5) * 100;
 }
 
 /**
